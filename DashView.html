@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Pharmacy Dashboard </title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
+  <script src="https://cdn.firebase.com/libs/angularfire/1.0.0/angularfire.min.js"></script>
+  <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="Stylesheet/admin.css" >
+  <link rel="stylesheet" href="Stylesheet/dashview.css">
+  <script src="JavaScript/PatientController.js"></script>
+  <script src="JavaScript/FindDay.js"></script>
+</head>
+<body ng-app="MyApp" onload="setDay()">
+  <div class="container-fluid">
+    <!-- title bar-->
+    <div class="row">
+      <div id="title-bar" class="navbar navbar-fixed-top" ng-controller="PatientController as userList" style="background:linear-gradient(to bottom right, {{color[0].bgcol1}}, {{color[0].bgcol2}});">
+        <!-- show pharmacy's logo -->
+        <div ng-controller="PatientController as userList">
+          <div ng-repeat="lo in setlogo" style="margin-left:50px; margin-top:3px;">
+            <div ng-show="lo.pittlogo"> <img src="pitt.jpg" alt="Pitt" width="5%" style="float:left" /></div>
+            <div ng-show="lo.cvslogo"> <img src="cvs.jpg" alt="CVS" width="8.5%" style="float:left"/> </div>
+            <div ng-show="lo.ralogo"> <img src="ra.png" alt="Rite Aid" width="6%" style="float:left"/> </div>
+            <div ng-show="lo.targetlogo"> <img src="target.png" alt="Target" width="5%" style="float:left"/> </div>
+            <div ng-show="lo.gelogo"> <img src="ge.png" alt="Giant Eagle" width="9%"  style="float:left"/> </div>
+          </div>
+        </div>
+
+        <!-- title -->
+        <ul class="nav navbar-nav" style="width:50%; height:70px;">
+           <h2 style="color:{{color[0].fontcol}}; ">Pharmacy Dashboard</h2>
+        </ul>
+
+        <!-- show today's working hour -->
+        <ul class="nav navbar-nav navbar-right" style=" color:{{color[0].fontcol}}; width:20%; height:70px;">
+          <li style="margin-top:15px;">
+            <p id="ismon" style="width:100%; margin:auto; height:70px;">{{hours[0].start}} - {{hours[0].end}}</p>
+            <p id="istue" style="width:100%; margin:auto; height:70px;">{{hours[1].start}} - {{hours[1].end}}</p>
+            <p id="iswed" style="width:100%; margin:auto; height:70px;">{{hours[2].start}} - {{hours[2].end}}</p>
+            <p id="isthu" style="width:100%; margin:auto; height:70px;">{{hours[3].start}} - {{hours[3].end}}</p>
+            <p id="isfri" style="width:100%; margin:auto; height:70px;">{{hours[4].start}} - {{hours[4].end}}</p>
+            <p id="issat" style="width:100%; margin:auto; height:70px;">{{hours[5].start}} - {{hours[5].end}}</p>
+            <p id="issun" style="width:100%; margin:auto; height:70px;">{{hours[6].start}} - {{hours[6].end}}</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- main page -->
+    <div class="row">
+
+      <!-- left row-->
+      <div id="left-control" class="col-md-2">
+
+        <!-- Patient search -->
+        <p id="search">Search Patient</p>
+        <input id="input" type="text" class="form-control" placeholder="Search..." ng-model="search" style="font-family:Avenir;"></input>
+
+        <!-- Time widget -->
+        <div style="margin: 15px 20px 0px; display: inline-block; text-align: center; width: 200px;">
+          <a href="http://localtimes.info/North_America/United_States/Pennsylvania/Pittsburgh/" style="text-decoration: none; font-size: 13px; color: rgb(0, 0, 0);"></a>
+          <script type="text/javascript" src="http://localtimes.info/clock.php?continent=North America&country=United States&province=Pennsylvania&city=Pittsburgh&cp1_Hex=000000&cp2_Hex=FFFFFF&cp3_Hex=000000&fwdt=200&ham=0&hbg=0&hfg=0&sid=0&mon=0&wek=0&wkf=0&sep=0&widget_number=1024"></script>
+        </div>
+
+        <!--weather widget-->
+        <div style="width: 234px;">
+          <iframe style="display: block;" src="http://cdnres.willyweather.com/widget/loadView.html?id=46441" width="234" height="61" frameborder="0" scrolling="no"></iframe>
+          <a style="text-indent: -9999em;z-index: 1;width: 20px;float: right;margin: -61px 0 0 0;height: 61px;display: block;position: relative" href="http://www.willyweather.com/pa/allegheny-county/pittsburgh.html">forecast for pittsburgh</a>
+        </div>
+
+        <!-- news widget-->
+        <div>
+          <script src="http://nmp.newsgator.com/NGBuzz/buzz.ashx?buzzId=81503&apiToken=AAA11919E8A84EB8986088D0B39F3E0B&trkP=&trkM=94EB6FAB-58C5-EE96-F3DB-C2444C40C1BA" type="text/javascript"></script>
+        </div>
+      </div>
+
+      <!-- right row-->
+      <div id="right-control" class="col-md-10">
+        <div ng-controller="PatientController as userList">
+          <div class="container-fluid">
+            <div class="main">
+			        <div class="row" style="font-weight: bold; font-size:16px; font-family:Avenir;">
+                <div class="col-xs-2">Patient Name</div>
+                <div class="col-xs-7">
+                  <div class="col-xs-3">Step 1</div>
+                  <div class="col-xs-3">Step 2</div>
+                  <div class="col-xs-3">Step 3</div>
+                  <div class="col-xs-3">Step 4</div>
+                </div>
+                <div class="col-xs-1">Step 5</div>
+                <div class="col-xs-2">Approximate Waiting Time</div>
+              </div>
+              <br/><br/>
+              
+              <!-- Patients table -->
+              <div class="container-fluid" ng-repeat="patient in patients | filter:search | orderBy:'-count'">
+                <div class="row" style="text-align:left">
+                  <div class="col-xs-2" ng-class="{orangeText: patient.alert}" style="line-height:40px">
+                    <p style="font-weight: bold; font-size:16px; font-family:Avenir;">
+                      {{patient.alias}}
+                    </p>
+                  </div>
+                  <div class="col-xs-8">
+                    <div class="progress" style="height:40px">
+                      <span ng-show="patient.alert"><font color="black">Please See the Pharmacist</font></span>
+                      <span ng-show="!patient.step1done && !patient.step2done && !patient.step3done && !patient.step4done && !patient.finished && !patient.alert">Your Prescription Journey Begins</span>
+                      <span ng-show="patient.step1done && !patient.step2done && !patient.step3done && !patient.step4done && !patient.finished && !patient.alert">Order Recieved</span>
+                      <span ng-show="patient.step1done && patient.step2done && !patient.step3done && !patient.step4done && !patient.finished && !patient.alert" >Confirming with Insurance to Save You Money</span>
+                      <span ng-show="patient.step1done && patient.step2done && patient.step3done && !patient.step4done && !patient.finished && !patient.alert">Assembling Your Prescription</span>
+                      <span ng-show="patient.step1done && patient.step2done && patient.step3done && patient.step4done && !patient.finished && !patient.alert"><font color="white">Confirming Your Medication is Right for You</font></span>
+                      <span ng-show="patient.step1done && patient.step2done && patient.step3done && patient.finished && !patient.alert"><font color="white">We're Ready For You</font></span>
+                      <div ng-show="patient.step1done" ng-class="{orangestyle: patient.alert}" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" style="width:20%"></div>
+                      <div ng-show="patient.step2done" ng-class="{orangestyle: patient.alert}"  class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" style="width:20%"></div>
+                      <div ng-show="patient.step3done" ng-class="{orangestyle: patient.alert}" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" style="width:20%"></div>
+                      <div ng-show="patient.step4done" ng-class="{orangestyle: patient.alert}" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" style="width:20%"></div>
+                      <div ng-show="patient.finished" ng-class="{orangestyle: patient.alert}"  class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" style="width:20%"></div>
+                    </div>
+                  </div>
+                  <div class="col-xs-2" align="center">
+                    <span ng-show="!patient.step1done && !patient.step2done && !patient.step3done && !patient.step4done && !patient.finished && !patient.alert">  {{patient.estwaittime}} minutes</span>
+                    <span ng-show="patient.step1done && !patient.step2done && !patient.step3done && !patient.step4done && !patient.finished && !patient.alert"> {{patient.estwaittime}} minutes</span>
+                    <span ng-show="patient.step1done && patient.step2done && !patient.step3done && !patient.step4done && !patient.finished && !patient.alert" >  {{patient.estwaittime}} minutes</span>
+                    <span ng-show="patient.step1done && patient.step2done && patient.step3done && !patient.step4done && !patient.finished && !patient.alert"> {{patient.estwaittime}} minutes</span>
+                    <span ng-show="patient.step1done && patient.step2done && patient.step3done && patient.step4done && !patient.finished && !patient.alert"> {{patient.estwaittime}} minutes</span>
+                    <span ng-show="patient.step1done && patient.step2done && patient.step3done && patient.finished && !patient.alert"><font color="green">Please come to the Pick-Up Window</font></span>
+                  </div>
+                </div>
+              </div><!-- End Patients table -->
+            </div>
+          </div>
+        </div>
+      </div><!-- End right row -->
+
+    </div><!-- End main page -->
+  </body>
+</div>
+</html>

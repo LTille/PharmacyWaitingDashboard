@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title> Admin Control Board </title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+	<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
+	<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+	<script src="https://cdn.firebase.com/libs/angularfire/1.0.0/angularfire.min.js"></script>
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<script src="JavaScript/PatientController.js"></script>
+	<link rel="stylesheet" href="Stylesheet/admin.css">
+	<link rel="stylesheet" href="Stylesheet/progressbar.css">
+</head>
+<body ng-app="MyApp">
+	<div ng-controller="PatientController as userList">
+		<div class="container-fluid">
+    		<div class="row">
+				<div id="title-bar" class="navbar navbar-fixed-top" ng-controller="PatientController as userList" style="background:linear-gradient(to bottom right, {{color[0].bgcol1}}, {{color[0].bgcol2}});">
+					<ul id="container" class="navbar navbar-nav">
+  						<p id="admin"  style="color:{{color[0].fontcol}};">Dashboard admin control</p>
+					</ul>
+					<ul id="setting" class="nav navbar-nav navbar-right">
+						<a id="set-btn" type="submit" class="btn btn-primary" href="setting.html"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Setting</a>
+      	  			</ul>
+			  	</div>
+			</div>
+
+  			<!-- main-->
+			<div class="row">
+
+    			<!-- left row-->
+				<div id="left-control" class="col-md-2">
+				 	<div ng-class="c1"></div>
+			      	<p id="add">Add Patient</p>
+				  	<form "navbar-form navbar-center" ng-submit="addNew()">
+					    <div class="form-group">
+				           <input id="input" type="text" ng-model="tame" class="form-control" placeholder="Name" style="font-family:Avenir;"><br>
+							<div id="aliasCheck">
+								<input id="input" type="text" ng-model="alias" class="form-control" check-duplicate-name existing-names="patients" placeholder="Alias" style="font-family:Avenir;"/>
+						    </div><br>
+				           <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Add</button>
+				        </div>
+			      	</form>
+				    <p id="search">Search Patient</p>
+				    <input id="input" type="text" class="form-control" placeholder="Search..." ng-model="search" style="font-family:Avenir;"></input><br>
+				</div>
+				
+				<!-- progress bar -->
+				<div id="right-control" class="col-md-10">
+					<table class="table table-bordered table-hover">
+						<!-- table's header -->
+						<thead>
+							<tr id="table-title">
+								<th> Patient Name </th>
+								<th ng-repeat="s in stepname"> {{s.step1}} </th>
+								<th ng-repeat="s in stepname"> {{s.step2}} </th>
+								<th ng-repeat="s in stepname"> {{s.step3}} </th>
+								<th ng-repeat="s in stepname"> {{s.step4}} </th>
+								<th ng-repeat="s in stepname"> {{s.step5}} </th>
+								<th> Alert </th>
+								<th> Remove </th>
+							</tr>
+						</thead>
+						<!-- table's content: each patient -->
+						<tr id="table-body" ng-repeat="patient in patients | filter:search | orderBy:'-count'" ng-class="{filled:patient.finished, orangestyle: patient.alert, whitestyle:!patient.alert}">
+							<td style="font-family:Avenir; font-size:16px; font-weight:bolder; ">{{patient.name}}</td>
+							<td ng-class="{greenstyle: patient.step1done, whitestyle: !patient.step1done, orangestyle: patient.alert}">
+								<button id="rec-btn" type="button" ng-class="{'btn btn-success': patient.step1done, 'btn btn-default': !patient.step1done, 'btn btn-warning': patient.alert}" ng-disabled="patient.step2done" ng-model="patient.step1done" ng-click="patient.step1done=!patient.step1done;updateArray1(patient)">{{patient.step1}}</button>
+							</td>
+							<td ng-class="{greenstyle: patient.step2done, whitestyle:!patient.step2done, orangestyle: patient.alert}">
+								<button id="rec-btn" type="button" ng-class="{'btn btn-success': patient.step2done, 'btn btn-default': !patient.step2done, 'btn btn-warning': patient.alert}" ng-disabled="patient.step3done || !patient.step1done " ng-model="patient.step2done" ng-click="patient.step2done=!patient.step2done;updateArray2(patient)">{{patient.step2}}</button>
+							</td>
+							<td  ng-class="{greenstyle: patient.step3done, whitestyle:!patient.step3done, orangestyle: patient.alert}">
+								<button id="rec-btn" type="button" ng-class="{'btn btn-success': patient.step3done, 'btn btn-default': !patient.step3done, 'btn btn-warning': patient.alert}" ng-disabled="patient.step4done || !patient.step1done || !patient.step2done" ng-model="patient.step3done" ng-click="patient.step3done=!patient.step3done;updateArray3(patient)">{{patient.step3}}</button>
+							</td>
+							<td  ng-class="{greenstyle: patient.step4done, whitestyle:!patient.step4done, orangestyle: patient.alert}">
+								<button id="rec-btn" type="button" ng-class="{'btn btn-success': patient.step4done, 'btn btn-default': !patient.step4done, 'btn btn-warning': patient.alert}" ng-disabled="patient.finished || !patient.step1done || !patient.step2done || !patient.step3done " ng-model="patient.step4done" ng-click="patient.step4done=!patient.step4done;updateArray4(patient)">{{patient.step4}}</button>
+							</td>
+							<td style="width:35px;"ng-class="{greenstyle: patient.finished, whitestyle:!patient.finished, orangestyle: patient.alert}">
+								<button id="circle-btn" type="button" style="margin-left:0px;" ng-class="{'btn btn-success': patient.finished, 'btn  btn-default': !patient.finished, 'btn btn-warning': patient.alert}" ng-disabled="!patient.step3done || !patient.step2done || !patient.step1done || !patient.step4done" ng-model="patient.finished" ng-click="patient.finished=!patient.finished;updateArray5(patient)"><span class="glyphicon glyphicon-ok"></button>
+							</td>
+							<td>
+								<button id="circle-btn" type="button" style="background-color:orange; border-color:orange;" ng-class="{'btn btn-default': !patient.alert, 'btn btn-warning ': patient.alert}" ng-disabled="patient.finished" ng-click="patient.alert=!patient.alert; updateArray6(patient)"><span class="glyphicon glyphicon-exclamation-sign"></button>
+							</td>
+							<td>
+								<button id="circle-btn" type="button" class="btn btn-danger"  ng-click ="open(patient)"><span class="glyphicon glyphicon-remove"></span></button>
+								<!-- Don't delete this script. Used for display the confirmation window before delete -->
+								<script type="text/ng-template" id="myModalContent.html">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h4 class="modal-title">CONFIRMATION</h4>
+										</div>
+										<div class="modal-body">
+											<p>Do you want to delete this <strong>{{patient.name}} </strong></p>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-default" ng-click ="dismiss()">Cancel</button>
+											<button type="button" class="btn btn-ok" ng-click='ok()'> Yes </button>
+										</div>
+									</div>
+								</script>
+							</td>
+						</tr>
+					</table>
+				</div>
+        	</div>
+		</div>
+	</div>
+</body>
+</html>

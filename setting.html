@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title> Admin Control Board </title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+	<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
+  <script type="text/javascript" src="js/jquery.min.js"></script>
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/bootstrap-timepicker.min.js"></script>
+  <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+  <script src="https://cdn.firebase.com/libs/angularfire/1.0.0/angularfire.min.js"></script>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<script src="JavaScriptPatientController.js"></script>
+  <script src="JavaScript/jscolor.js"></script>
+  <link rel="stylesheet" href="Stylesheet/admin.css">
+</head>
+<body ng-app="MyApp">
+  <div ng-controller="PatientController as userList">
+    <div class="container-fluid">
+      <div class="row">
+        <div id="title-bar" class="navbar navbar-fixed-top" ng-controller="PatientController as userList" style="background:linear-gradient(to bottom right, {{color[0].bgcol1}}, {{color[0].bgcol2}});">
+          <ul id="container" class="nav navbar-nav" >
+            <h2 id="admin"  style="color:{{color[0].fontcol}};">Dashboard Setting</h2>
+          </ul>
+          <ul id="setting" class="nav navbar-nav navbar-right">
+            <a id="set-btn" type="submit" class="btn btn-primary" href="newindex.html"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span> Back</a>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="setting">
+      <div class="post">
+        <h3 style="text-align:center; font-family:Avenir;"> Customize the admin control board </h3>
+
+        <!-- set logo -->
+        <form "navbar-form navbar-center" ng-submit="addLogo()">
+          <div ng-init="logo='pitt'" class="post-group">
+            <label>Choose your control board theme</label>
+            <br>
+            <input id="e1" type="radio" name="emotion" ng-model="logo" value="pitt" checked="checked" />
+            <label class="emotion e1" for="e1"></label>
+            &nbsp;&nbsp;
+            <input id="e2" type="radio" name="emotion" ng-model="logo" value="cvs" />
+            <label class="emotion e2" for="e2"></label>
+            &nbsp;&nbsp;
+            <input id="e3" type="radio" name="emotion" ng-model="logo" value="ra" />
+            <label class="emotion e3" for="e3"></label>
+            &nbsp;&nbsp;
+            <input id="e4" type="radio" name="emotion" ng-model="logo" value="target" />
+            <label class="emotion e4" for="e4"></label>
+            &nbsp;&nbsp;
+            <input id="e5" type="radio" name="emotion" ng-model="logo" value="ge" />
+            <label class="emotion e5" for="e5"></label>
+            <br><br>
+            <button id="set-btn-2" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon" aria-hidden="true"></span> Choose</button>
+          </div>
+        </form>
+
+        <!-- set color theme -->
+        <form "navbar-form navbar-center" ng-submit="updatecolor()">
+          <div class="post-group">
+            <label>Choose your desire bar color theme</label>
+            <br>
+            <p>Background color</p>
+            <input ng-model="bgcolor1" class="jscolor" value="cc66ff" class="form-control" placeholder="Color" style="font-family:Avenir;">
+            <input ng-model="bgcolor2" class="jscolor" value="cc66ff" class="form-control" placeholder="Color" style="font-family:Avenir;">
+            <p>Font color</p>
+            <input ng-model="fontcolor" class="jscolor" value="cc66ff" class="form-control" placeholder="Color" style="font-family:Avenir;">
+            &nbsp;  &nbsp;
+					  <button id="set-btn-2" type="submit" class="btn btn-primary" style="width:120px;">Change color</button>
+						<br><br>
+          </div>
+        </form>
+        
+        <!-- set steps names -->
+        <form "navbar-form navbar-center" ng-submit="addStepname()">
+          <div class="post-groups col-md-1"></div>
+          <div class="post-groups col-md-6">
+            <label>Step name</label>
+            <br>
+            <small class="text-muted">Customize the name of steps here</small>
+            <input class="form-control" id="stepname1" ng-model="stepone" placeholder="Type step 1 name" style="width:300px;" maxlength="35">
+            <br>
+            <input class="form-control" id="stepname2" ng-model="steptwo" placeholder="Type step 2 name" style="width:300px;" maxlength="35">
+            <br>
+            <input class="form-control" ng-show="hasstep3" id="stepname3" ng-model="stepthree" placeholder="Type step 3 name" style="width:300px;" maxlength="35">
+            <br>
+            <input class="form-control" ng-show="hasstep4" id="stepname4" ng-model="stepfour" placeholder="Type step 4 name" style="width:300px;" maxlength="35">
+            <br>
+            <input class="form-control" ng-show="hasstep5" id="stepname5" ng-model="stepfive" placeholder="Type step 5 name" style="width:300px;" maxlength="35">
+            <br>
+          </div>
+          <div class="post-groups-2 col-md-4">
+            <label>Step time</label>
+            <br>
+            <small class="text-muted">Customize the time of steps here</small>
+            <input class="form-control" type="number" id="step1time" ng-model="s1est" placeholder="Type step 1 time" style="width:200px;">
+            <br>
+            <input class="form-control" type="number" id="step2time" ng-model="s2est" value="5" placeholder="Type step 2 time (min)" style="width:200px;" >
+            <br>
+            <input class="form-control" type="number" id="step3time" ng-model="s3est" placeholder="Type step 3 time (min)" style="width:200px;">
+            <br>
+            <input class="form-control" type="number" id="step4name" ng-model="s4est" placeholder="Type step 4 time (min)" style="width:200px;">
+            <br>
+            <input class="form-control" type="number" id="step5name" ng-model="s5est" placeholder="Type step 5 time (min)" style="width:200px;">
+            <br>
+            <button id="set-btn-3" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Save step name and time</button>
+            <br><br>
+          </div>
+        </form>
+
+        <!-- set steps times -->
+        <div class="post-group">
+          <button id="set-btn-4" type="button" class="btn btn-primary" ng-click="showhistory()">Show updated historical waiting time</button>
+          <br><br>
+          <table class="table table-bordered table-hover">
+        		<thead>
+        			<tr>
+        				<th ng-repeat="s in stepname">{{s.step1}} </th>
+        				<th ng-repeat="s in stepname">{{s.step2}}</th>
+        				<th ng-repeat="s in stepname">{{s.step3}}</th>
+        				<th ng-repeat="s in stepname">{{s.step4}}</th>
+        				<th ng-repeat="s in stepname">{{s.step5}}</th>
+        				<th ng-repeat="s in stepname">total</th>
+        			</tr>
+        		</thead>
+        		<tr ng-repeat="aw in averagewait">
+        			<td> {{aw.averages1 | number:1}} min</td>
+              <td>{{aw.averages2 | number:1}} min</td>
+        			<td>{{aw.averages3 | number:1}} min</td>
+        			<td>{{aw.averages4 | number:1}} min</td>
+        			<td>{{aw.averages5 | number:1}} min</td>
+        			<td>{{aw.averagett | number:1}} min</td>
+        		</tr>
+        	</table>
+      	</div>
+
+        <!-- set working hours -->
+        <form "navbar-form navbar-center" ng-submit="changeHours()">
+          <div class="post-group">
+            <label>Set pharmacy hours</label><br>
+  					<div class="row " id="fullnameFld" style="margin-left:10px;">
+              <small class="text-muted">Monday open time</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    					<input id="mon-open" ng-model="monopen" size="32" maxlength="32" autocomplete="off" aria-required="true" tabindex="1" class="fieldValInit" type="time" style="width:100px;">&nbsp; &nbsp; &nbsp;
+              <small class="text-muted">Monday close time</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <input id="mon-close" ng-model="monclose" size="32" maxlength="32" autocomplete="off" aria-required="true" tabindex="1" class="fieldValInit" type="time" style="width:100px;">
+    					<br><br>
+    					<small class="text-muted">Tuesday open time</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     					<input id="tue-open" ng-model="tueopen" size="32" maxlength="32" autocomplete="off" aria-required="true" tabindex="1" class="fieldValInit" type="time" style="width:100px;">&nbsp; &nbsp; &nbsp;
+     				  <small class="text-muted">Tuesday close time</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     					<input id="tue-close" ng-model="tueclose" size="32" maxlength="32" autocomplete="off" aria-required="true" tabindex="1" class="fieldValInit" type="time" style="width:100px;">
+    					<br><br>
+    					<small class="text-muted">Wednesday open time</small>
+    					<input id="wed-open" ng-model="wedopen" size="32" maxlength="32" autocomplete="off" aria-required="true" tabindex="1" class="fieldValInit" type="time" style="width:100px;">&nbsp; &nbsp; &nbsp;
+    					<small class="text-muted">Wednesday close time</small>
+    					<input id="wed-close" ng-model="wedclose" size="32" maxlength="32" autocomplete="off" aria-required="true" tabindex="1" class="fieldValInit" type="time" style="width:100px;">
+    					<br><br>
+    					<small class="text-muted">Thursday open time</small>&nbsp;&nbsp;&nbsp;&nbsp;
+    					<input id="thu-open" ng-model="thuopen" size="32" maxlength="32" autocomplete="off" aria-required="true" tabindex="1" class="fieldValInit" type="time" style="width:100px;">&nbsp; &nbsp; &nbsp;
+    	 				<small class="text-muted">Thursday close time</small>&nbsp;&nbsp;&nbsp;&nbsp;
+    	 				<input id="thu-close" ng-model="thuclose" size="32" maxlength="32" autocomplete="off" aria-required="true" tabindex="1" class="fieldValInit" type="time" style="width:100px;">
+      				<br><br>
+    	 				<small class="text-muted">Friday open time</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    	  			<input id="fri-open" ng-model="friopen" size="32" maxlength="32" autocomplete="off" aria-required="true" tabindex="1" class="fieldValInit" type="time" style="width:100px;">&nbsp; &nbsp; &nbsp;
+    	  			<small class="text-muted">Friday close time</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    	  			<input id="fri-close" ng-model="friclose" size="32" maxlength="32" autocomplete="off" aria-required="true" tabindex="1" class="fieldValInit" type="time" style="width:100px;">
+    					<br><br>
+    	 			  <small class="text-muted">Saturday open time</small>&nbsp;&nbsp;&nbsp;&nbsp;
+      			 	<input id="sat-open" ng-model="satopen" size="32" maxlength="32" autocomplete="off" aria-required="true" tabindex="1" class="fieldValInit" type="time" style="width:100px;">&nbsp; &nbsp; &nbsp;
+    					<small class="text-muted">Saturday close time</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    					<input id="sat-close" ng-model="satclose" size="32" maxlength="32" autocomplete="off" aria-required="true" tabindex="1" class="fieldValInit" type="time" style="width:100px;">
+    				  <br><br>
+    				  <small class="text-muted">Sunday open time</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    					<input id="sun-open" ng-model="sunopen" size="32" maxlength="32" autocomplete="off" aria-required="true" tabindex="1" class="fieldValInit" type="time" style="width:100px;">&nbsp; &nbsp; &nbsp;
+    					<small class="text-muted">Sunday close time</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    					<input id="sun-close" ng-model="sunclose" size="32" maxlength="32" autocomplete="off" aria-required="true" tabindex="1" class="fieldValInit" type="time" style="width:100px;">
+              <br><br>
+    					<button id="set-btn-2" type="submit" class="btn btn-primary" style="width:120px;">Set time</button>
+    				</div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
